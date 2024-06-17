@@ -1,6 +1,7 @@
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import { publicRoutes } from "./routes/Routes.index";
-import { DefaultLayout } from "./components/Layouts/Layout.index";
+import { DefaultLayout, MessageLayout, ProfileLayout } from "./components/Layouts/Layout.index";
+import { Fragment } from "react";
 
 function App() {
   return (
@@ -9,7 +10,16 @@ function App() {
         <Routes>
           {publicRoutes.map((route, index) => {
             const Page = route.component;
-            const Layout = route.layout === null ? DefaultLayout : "";
+            let Layout = null
+            if (route.layout === null){
+              Layout = DefaultLayout;
+            }else if (route.layout === ""){
+              Layout = Fragment;
+            }else if(route.layout === "Profile"){
+              Layout = ProfileLayout;
+            }else if(route.layout === "Chat"){
+              Layout = MessageLayout;
+            }
             return (
               <Route
                 key={index}

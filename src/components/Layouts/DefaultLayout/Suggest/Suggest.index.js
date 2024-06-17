@@ -1,13 +1,13 @@
 import * as React from "react";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
+import { MyContext } from "..";
+import { CustomTooltip } from "../../../../pages/Home/Post";
+import Thumb from "../../../../pages/Home/Thumb";
+import SuggestItem from "./SuggestItem";
 
 function Suggest() {
-
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -18,16 +18,20 @@ function Suggest() {
     setOpen(false);
   };
 
-  const [isHidden, setIsHidden] = React.useState(false);
+  // checkDivWidth
   const targetRef = React.useRef(null);
-
+  const { sharedWidth } = React.useContext(MyContext);
   const checkDivWidth = () => {
     const targetDiv = targetRef.current;
-    const minWidth = 240; // Đặt độ rộng tối thiểu tại đây
-    if (targetDiv && targetDiv.offsetWidth < minWidth) {
-    } else {
+    console.log("targetDiv in Suggest:", targetDiv?.offsetWidth);
+    console.log("sharedWidth in Suggest:", sharedWidth);
+    if (targetDiv && sharedWidth < 540) {
+      targetDiv.classList.add("hidden");
+    } else if (targetDiv) {
+      targetDiv.classList.remove("hidden");
     }
   };
+
   React.useEffect(() => {
     // Kiểm tra khi tải trang
     checkDivWidth();
@@ -39,7 +43,7 @@ function Suggest() {
     return () => {
       window.removeEventListener("resize", checkDivWidth);
     };
-  }, []);
+  }, [sharedWidth]); // Phải có sharedWidth ở đây để useEffect lắng nghe sự thay đổi của nó
 
   return (
     <div ref={targetRef} className="col-start-8 col-span-3 ml-auto mr-3">
@@ -74,7 +78,7 @@ function Suggest() {
               minWidth: "0",
               ":hover": {
                 border: "none",
-                color: "#00376b"
+                color: "#00376b",
               },
             }}
           >
@@ -88,76 +92,21 @@ function Suggest() {
           </span>
         </div>
         <div className="my-[15px] flex flex-col gap-y-[14px]">
-          <div className="flex items-center gap-x-[12px]">
-            <div className="cursor-pointer">
-              <img
-                src="https://letsenhance.io/static/8f5e523ee6b2479e26ecc91b9c25261e/1015f/MainAfter.jpg"
-                alt="asd"
-                className="w-[44px] h-[44px] rounded-[50%] object-cover"
-              />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-[14px] font-semibold cursor-pointer">
-                _Pbat
-              </span>
-              <span className="text-[14px] text-[#737373]">
-                Suggested for you
-              </span>
-            </div>
-            <button className="ml-auto text-[12px] text-[#0095f6] font-medium hover:text-[#00376b]">
-              Follow
-            </button>
-          </div>
-
-          <div className="flex items-center gap-x-[12px]">
-            <div className="cursor-pointer">
-              <img
-                src="https://letsenhance.io/static/8f5e523ee6b2479e26ecc91b9c25261e/1015f/MainAfter.jpg"
-                alt="asd"
-                className="w-[44px] h-[44px] rounded-[50%] object-cover"
-              />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-[14px] font-semibold cursor-pointer">
-                _Pbat
-              </span>
-              <span className="text-[14px] text-[#737373]">
-                Suggested for you
-              </span>
-            </div>
-            <button className="ml-auto text-[12px] text-[#0095f6] font-medium">
-              Follow
-            </button>
-          </div>
-
-          <div className="flex items-center gap-x-[12px]">
-            <div className="cursor-pointer">
-              <img
-                src="https://letsenhance.io/static/8f5e523ee6b2479e26ecc91b9c25261e/1015f/MainAfter.jpg"
-                alt="asd"
-                className="w-[44px] h-[44px] rounded-[50%] object-cover"
-              />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-[14px] font-semibold cursor-pointer">
-                _Pbat
-              </span>
-              <span className="text-[14px] text-[#737373]">
-                Suggested for you
-              </span>
-            </div>
-            <button className="ml-auto text-[12px] text-[#0095f6] font-medium">
-              Follow
-            </button>
-          </div>
+          <SuggestItem />
+          <SuggestItem />
+          <SuggestItem />
         </div>
       </div>
 
-      <Dialog open={open} onClose={handleClose} sx={{
-        "& .MuiDialog-paper": {
-          borderRadius: "8px",
-        },
-      }}>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        sx={{
+          "& .MuiDialog-paper": {
+            borderRadius: "8px",
+          },
+        }}
+      >
         <DialogContent
           sx={{
             padding: "0",
