@@ -1,6 +1,8 @@
 import Chat from "../pages/Chat/Chat.index";
 import Home from "../pages/Home/Home.index";
+import Login from "../pages/Login/Login.index";
 import Profile from "../pages/Profile/Profile.index";
+import Register from "../pages/Register/register.index";
 import Story from "../pages/Story/Story.index";
 
 export const publicRoutes = [
@@ -8,6 +10,8 @@ export const publicRoutes = [
     { path: "/story", component: Story, layout: "" },
     { path: "/chat", component: Chat, layout: "Chat" },
     { path: "/profile", component: Profile, layout: "Profile" },
+    { path: "/register", component: Register, layout: "" },
+    { path: "/login", component: Login, layout: "" },
 
 ];
   

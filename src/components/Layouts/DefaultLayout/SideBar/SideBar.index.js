@@ -1,8 +1,17 @@
-import { useEffect, useRef, useState } from "react";
+import {
+  Button,
+  Dialog,
+  DialogContent,
+  Popover,
+  Typography,
+} from "@mui/material";
 import { Link } from "react-router-dom";
+import * as React from "react";
+import Search from "./Search";
+import Following from "./Following";
 
 function SideBar() {
-  const targetRef = useRef(null);
+  const targetRef = React.useRef(null);
   const checkDivWidth = () => {
     const targetDiv = targetRef.current;
     const minWidth = 240; // Đặt độ rộng tối thiểu tại đây
@@ -41,7 +50,7 @@ function SideBar() {
       textMore.classList.remove("hidden");
     }
   };
-  useEffect(() => {
+  React.useEffect(() => {
     // Kiểm tra khi tải trang
     checkDivWidth();
 
@@ -54,6 +63,57 @@ function SideBar() {
     };
   }, []);
 
+  // popover search
+  const [anchorElSearch, setAnchorElSearch] = React.useState(null);
+
+  const handleClickSearch = (event) => {
+    setAnchorElSearch(event.currentTarget);
+  };
+
+  const handleCloseSearch = () => {
+    setAnchorElSearch(null);
+  };
+
+  const openSearch = Boolean(anchorElSearch);
+  const idSearch = openSearch ? "simple-popover" : undefined;
+
+  // popover notification
+  const [anchorElNotification, setAnchorElNotification] = React.useState(null);
+
+  const handleClickNotification = (event) => {
+    setAnchorElNotification(event.currentTarget);
+  };
+
+  const handleCloseNotification = () => {
+    setAnchorElNotification(null);
+  };
+
+  const openNotification = Boolean(anchorElNotification);
+  const idNotification = openNotification ? "simple-popover" : undefined;
+
+  // Create
+  const [openCreate, setOpenCreate] = React.useState(false);
+
+  const handleClickOpenCreate = () => {
+    setOpenCreate(true);
+  };
+
+  const handleCloseCreate = () => {
+    setOpenCreate(false);
+  };
+
+  // display image
+  const [selectedImage, setSelectedImage] = React.useState(null);
+  const handleImageChange = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      let reader = new FileReader();
+      reader.onload = (event) => {
+        setSelectedImage(event.target.result);
+      };
+      reader.readAsDataURL(e.target.files[0]);
+    }
+  };
+
   return (
     <div ref={targetRef} className="col-start-1 col-span-2">
       <div className="fixed">
@@ -61,7 +121,10 @@ function SideBar() {
           id="wrap"
           className="container w-[110%] px-[12px] pt-[8px] pb-[20px] flex flex-col gap-y-[4px] h-screen border-r-[1px]"
         >
-          <Link to="/" className="w-full h-[92px] px-[12px] pt-[25px] pb-[16px] cursor-pointer">
+          <Link
+            to="/"
+            className="w-full h-[92px] px-[12px] pt-[25px] pb-[16px] cursor-pointer"
+          >
             <svg
               id="text-logo"
               aria-label="Instagram"
@@ -96,7 +159,11 @@ function SideBar() {
           </Link>
 
           {/* <!-- Home --> */}
-          <Link to="/" className="w-full p-[12px] flex gap-x-[16px] items-center hover:bg-[#f2f2f2] rounded-[8px] cursor-pointer">
+
+          <Link
+            to="/"
+            className="w-full p-[12px] flex gap-x-[16px] items-center hover:bg-[#f2f2f2] rounded-[8px] cursor-pointer"
+          >
             <svg
               aria-label="Home"
               className="x1lliihq x1n2onr6 x5n08af"
@@ -121,7 +188,37 @@ function SideBar() {
           </Link>
 
           {/* <!-- Search --> */}
-          <div className="w-full p-[12px] flex gap-x-[16px] items-center hover:bg-[#f2f2f2] rounded-[8px] cursor-pointer">
+
+          <Button
+            aria-describedby={idSearch}
+            variant="contained"
+            onClick={handleClickSearch}
+            sx={{
+              fontWeight: "600",
+              width: "100%",
+              padding: "12px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "left",
+              columnGap: "16px",
+              borderRadius: "8px",
+              cursor: "pointer",
+              backgroundColor: "#fff",
+              boxShadow: "none",
+              border: "none",
+              lineHeight: "0",
+              fontWeight: "400",
+              letterSpacing: "0px",
+              textTransform: "none",
+              minWidth: "0",
+              color: "black",
+              ":hover": {
+                border: "none",
+                backgroundColor: "#f2f2f2",
+                boxShadow: "none",
+              },
+            }}
+          >
             <svg
               aria-label="Search"
               className="x1lliihq x1n2onr6 x5n08af"
@@ -155,10 +252,13 @@ function SideBar() {
             <p id="text-search" className="text-[16px]">
               Search
             </p>
-          </div>
+          </Button>
 
           {/* <!-- Messages --> */}
-          <Link to="/chat" className="w-full p-[12px] flex gap-x-[16px] items-center hover:bg-[#f2f2f2] rounded-[8px] cursor-pointer">
+          <Link
+            to="/chat"
+            className="w-full p-[12px] flex gap-x-[16px] items-center hover:bg-[#f2f2f2] rounded-[8px] cursor-pointer"
+          >
             <svg
               aria-label="Direct"
               className="x1lliihq x1n2onr6 x5n08af"
@@ -193,7 +293,36 @@ function SideBar() {
           </Link>
 
           {/* <!-- Notifications --> */}
-          <div className="w-full p-[12px] flex gap-x-[16px] items-center hover:bg-[#f2f2f2] rounded-[8px] cursor-pointer">
+          <Button
+            aria-describedby={idNotification}
+            variant="contained"
+            onClick={handleClickNotification}
+            sx={{
+              fontWeight: "600",
+              width: "100%",
+              padding: "12px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "left",
+              columnGap: "16px",
+              borderRadius: "8px",
+              cursor: "pointer",
+              backgroundColor: "#fff",
+              boxShadow: "none",
+              border: "none",
+              lineHeight: "0",
+              fontWeight: "400",
+              letterSpacing: "0px",
+              textTransform: "none",
+              minWidth: "0",
+              color: "black",
+              ":hover": {
+                border: "none",
+                backgroundColor: "#f2f2f2",
+                boxShadow: "none",
+              },
+            }}
+          >
             <svg
               aria-label="Notifications"
               className="x1lliihq x1n2onr6 x5n08af"
@@ -209,10 +338,38 @@ function SideBar() {
             <p id="text-notification" className="text-[16px]">
               Notifications
             </p>
-          </div>
+          </Button>
 
           {/* <!-- Creates --> */}
-          <div className="w-full p-[12px] flex gap-x-[16px] items-center hover:bg-[#f2f2f2] rounded-[8px] cursor-pointer">
+          <Button
+            variant="outlined"
+            onClick={handleClickOpenCreate}
+            sx={{
+              fontWeight: "600",
+              width: "100%",
+              padding: "12px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "left",
+              columnGap: "16px",
+              borderRadius: "8px",
+              cursor: "pointer",
+              backgroundColor: "#fff",
+              boxShadow: "none",
+              border: "none",
+              lineHeight: "0",
+              fontWeight: "400",
+              letterSpacing: "0px",
+              textTransform: "none",
+              minWidth: "0",
+              color: "black",
+              ":hover": {
+                border: "none",
+                backgroundColor: "#f2f2f2",
+                boxShadow: "none",
+              },
+            }}
+          >
             <svg
               aria-label="New post"
               className="x1lliihq x1n2onr6 x5n08af"
@@ -257,10 +414,13 @@ function SideBar() {
             <p id="text-create" className="text-[16px]">
               Create
             </p>
-          </div>
+          </Button>
 
           {/* <!-- Profile --> */}
-          <Link to="/profile" className="w-full p-[12px] flex gap-x-[16px] items-center hover:bg-[#f2f2f2] rounded-[8px] cursor-pointer">
+          <Link
+            to="/profile"
+            className="w-full p-[12px] flex gap-x-[16px] items-center hover:bg-[#f2f2f2] rounded-[8px] cursor-pointer"
+          >
             <img
               src="https://letsenhance.io/static/8f5e523ee6b2479e26ecc91b9c25261e/1015f/MainAfter.jpg"
               alt="dsa"
@@ -317,12 +477,179 @@ function SideBar() {
                 y2="20"
               ></line>
             </svg>
-            <p id="text-more" className="text-[16px]">
+            <p id="text-more" className="text-[16px] ml">
               More
             </p>
           </div>
         </div>
       </div>
+
+      {/* search */}
+      <Popover
+        id={idSearch}
+        open={openSearch}
+        anchorEl={anchorElSearch}
+        onClose={handleCloseSearch}
+        anchorOrigin={{
+          vertical: "top",
+          horizontal: "right",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "left",
+        }}
+        sx={{
+          marginLeft: "1rem",
+        }}
+      >
+        <div className="w-[397px] h-[550px] px-4 py-8">
+          <div className="mb-6">
+            <span className="text-2xl font-medium">Search</span>
+          </div>
+          <div>
+            <input
+              className="w-full border-none focus:outline-none rounded-md bg-slate-200"
+              type="text"
+              placeholder="Search"
+            />
+          </div>
+          <div>
+            <Search name={"The"} />
+            <Search name={"Manh"} />
+            <Search name={"Phong"} />
+            <Search name={"Phong"} />
+
+            <Search name={"Phong"} />
+            <Search name={"Phong"} />
+            <Search name={"Phong"} />
+          </div>
+        </div>
+      </Popover>
+
+      <Popover
+        id={idNotification}
+        open={openNotification}
+        anchorEl={anchorElNotification}
+        onClose={handleCloseNotification}
+        anchorOrigin={{
+          vertical: "top",
+          horizontal: "right",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "left",
+        }}
+        sx={{
+          marginLeft: "1rem",
+        }}
+      >
+        <div className="w-[397px] h-[550px] px-4 py-8">
+          <div className="mb-3">
+            <span className="text-2xl font-semibold">Notifications</span>
+          </div>
+          <div>
+            <span className="text-base font-medium">New</span>
+          </div>
+          <div className="mt-2">
+            <Following name={"Chi"} />
+            <Following name={"asdhiasdiusadiasgdiasgdisag"} />
+          </div>
+        </div>
+      </Popover>
+
+      {/* Create */}
+      <Dialog
+        open={openCreate}
+        onClose={handleCloseCreate}
+        sx={{
+          "& .MuiDialog-paper": {
+            borderRadius: "8px",
+            maxWidth: "none",
+          },
+        }}
+      >
+        <DialogContent
+          sx={{
+            padding: "0",
+          }}
+        >
+          <div className="w-[800px] h-[500px]">
+            <div className="flex items-center py-2 px-4 border-b">
+              <span className="text-base font-medium ml-[50%] translate-x-[-50%]">
+                Create new post
+              </span>
+              <span className="text-base font-medium ml-auto cursor-pointer text-[#0095f6]">
+                Share
+              </span>
+            </div>
+            <div className="h-[450px] flex ">
+              <div className="flex justify-center items-center w-[55%] h-full">
+                {selectedImage === null ? (
+                  <div>
+                    <div>
+                      <svg
+                        aria-label="Icon to represent media such as images or videos"
+                        class="x1lliihq x1n2onr6 x5n08af"
+                        fill="currentColor"
+                        height="77"
+                        role="img"
+                        viewBox="0 0 97.6 77.3"
+                        width="96"
+                      >
+                        <title>
+                          Icon to represent media such as images or videos
+                        </title>
+                        <path
+                          d="M16.3 24h.3c2.8-.2 4.9-2.6 4.8-5.4-.2-2.8-2.6-4.9-5.4-4.8s-4.9 2.6-4.8 5.4c.1 2.7 2.4 4.8 5.1 4.8zm-2.4-7.2c.5-.6 1.3-1 2.1-1h.2c1.7 0 3.1 1.4 3.1 3.1 0 1.7-1.4 3.1-3.1 3.1-1.7 0-3.1-1.4-3.1-3.1 0-.8.3-1.5.8-2.1z"
+                          fill="currentColor"
+                        ></path>
+                        <path
+                          d="M84.7 18.4 58 16.9l-.2-3c-.3-5.7-5.2-10.1-11-9.8L12.9 6c-5.7.3-10.1 5.3-9.8 11L5 51v.8c.7 5.2 5.1 9.1 10.3 9.1h.6l21.7-1.2v.6c-.3 5.7 4 10.7 9.8 11l34 2h.6c5.5 0 10.1-4.3 10.4-9.8l2-34c.4-5.8-4-10.7-9.7-11.1zM7.2 10.8C8.7 9.1 10.8 8.1 13 8l34-1.9c4.6-.3 8.6 3.3 8.9 7.9l.2 2.8-5.3-.3c-5.7-.3-10.7 4-11 9.8l-.6 9.5-9.5 10.7c-.2.3-.6.4-1 .5-.4 0-.7-.1-1-.4l-7.8-7c-1.4-1.3-3.5-1.1-4.8.3L7 49 5.2 17c-.2-2.3.6-4.5 2-6.2zm8.7 48c-4.3.2-8.1-2.8-8.8-7.1l9.4-10.5c.2-.3.6-.4 1-.5.4 0 .7.1 1 .4l7.8 7c.7.6 1.6.9 2.5.9.9 0 1.7-.5 2.3-1.1l7.8-8.8-1.1 18.6-21.9 1.1zm76.5-29.5-2 34c-.3 4.6-4.3 8.2-8.9 7.9l-34-2c-4.6-.3-8.2-4.3-7.9-8.9l2-34c.3-4.4 3.9-7.9 8.4-7.9h.5l34 2c4.7.3 8.2 4.3 7.9 8.9z"
+                          fill="currentColor"
+                        ></path>
+                        <path
+                          d="M78.2 41.6 61.3 30.5c-2.1-1.4-4.9-.8-6.2 1.3-.4.7-.7 1.4-.7 2.2l-1.2 20.1c-.1 2.5 1.7 4.6 4.2 4.8h.3c.7 0 1.4-.2 2-.5l18-9c2.2-1.1 3.1-3.8 2-6-.4-.7-.9-1.3-1.5-1.8zm-1.4 6-18 9c-.4.2-.8.3-1.3.3-.4 0-.9-.2-1.2-.4-.7-.5-1.2-1.3-1.1-2.2l1.2-20.1c.1-.9.6-1.7 1.4-2.1.8-.4 1.7-.3 2.5.1L77 43.3c1.2.8 1.5 2.3.7 3.4-.2.4-.5.7-.9.9z"
+                          fill="currentColor"
+                        ></path>
+                      </svg>
+                    </div>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageChange}
+                    />
+                  </div>
+                ) : (
+                  <img
+                    className="object-cover "
+                    src={selectedImage}
+                    alt="Selected"
+                  />
+                )}
+              </div>
+              <div className="w-[45%] p-3 border-l">
+                <div className="flex items-center gap-3">
+                  <div>
+                    <img
+                      className="w-[28px] h-[28px] rounded-[50%] object-cover"
+                      src="https://letsenhance.io/static/8f5e523ee6b2479e26ecc91b9c25261e/1015f/MainAfter.jpg"
+                    />
+                  </div>
+                  <div>
+                    <span className="text-sm font-medium">The</span>
+                  </div>
+                </div>
+                <div className="mt-4 pt-2 border-t">
+                  <textarea
+                    placeholder="Write a caption"
+                    className="w-full h-96 border-none outline-none focus:border-none focus:outline-none"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
