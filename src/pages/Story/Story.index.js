@@ -1,30 +1,41 @@
 import { LinearProgress } from "@mui/material";
-import { Link, useNavigate } from "react-router-dom";
-import * as React from 'react';
+import { Link, useNavigate, useParams } from "react-router-dom";
+import * as React from "react";
+import Stories from "stories-react";
 
 function Story() {
   const [progress, setProgress] = React.useState(0);
   const navigate = useNavigate();
+  const params = useParams();
 
-  React.useEffect(() => {
-    const timer = setInterval(() => {
-      setProgress((oldProgress) => {
-        if (oldProgress === 100) {
-            clearInterval(timer);
-            navigate('/');  // Điều hướng về trang chủ
-            return oldProgress; 
-        }
-        return oldProgress + 10;
-      });
-    }, 500);
+  // useEffect(() => {
+  //   getBookById(params.bookId).then((value) => {
+  //     setBook(value);
+  //   });
+  // }, []);
 
-    return () => {
-      clearInterval(timer);
-    };
-  }, []);
+  // stories
+  const stories = [
+    {
+      type: "image",
+      url: "https://images.pexels.com/photos/9470805/pexels-photo-9470805.jpeg?w=300",
+      duration: 2000000,
+    },
+    {
+      type: "image",
+      duration: 200000,
+      url: "https://images.pexels.com/photos/9733197/pexels-photo-9733197.jpeg?w=300",
+    },
+  ];
 
+  const handleStoriesEnd = () => {
+    navigate("/");
+  };
+
+  // index
+  const [currentIndex, setCurrentIndex] = React.useState(params);
   return (
-    <div class="flex h-screen w-screen justify-between bg-[#1a1a1a] p-3">
+    <div class="flex h-screen w-screen justify-between bg-[#1a1a1a] p-6">
       <Link to="/" className="cursor-pointer">
         <svg
           id="text-logo"
@@ -45,13 +56,36 @@ function Story() {
           ></path>
         </svg>
       </Link>
-      <div className="relative">
-        <LinearProgress variant="determinate" value={progress} />
-        <img
-          class="h-full w-[348px] rounded-[6px] object-cover"
-          src="https://letsenhance.io/static/8f5e523ee6b2479e26ecc91b9c25261e/1015f/MainAfter.jpg"
-          alt=""
-        />
+      <div className="flex items-center gap-x-4">
+        <div className="cursor-pointer">
+          <svg
+            aria-label="Previous"
+            class="x1lliihq x1n2onr6 xq3z1fi text-white"
+            fill="currentColor"
+            height="24"
+            role="img"
+            viewBox="0 0 24 24"
+            width="24"
+          >
+            <title>Previous</title>
+            <path d="M12.005.503a11.5 11.5 0 1 0 11.5 11.5 11.513 11.513 0 0 0-11.5-11.5Zm2.207 15.294a1 1 0 1 1-1.416 1.412l-4.5-4.51a1 1 0 0 1 .002-1.415l4.5-4.489a1 1 0 0 1 1.412 1.416l-3.792 3.783Z"></path>
+          </svg>
+        </div>
+        <Stories stories={stories} onAllStoriesEnd={handleStoriesEnd} />
+        <div className="cursor-pointer">
+          <svg
+            aria-label="Next"
+            class="x1lliihq x1n2onr6 xq3z1fi text-white"
+            fill="currentColor"
+            height="24"
+            role="img"
+            viewBox="0 0 24 24"
+            width="24"
+          >
+            <title>Next</title>
+            <path d="M12.005.503a11.5 11.5 0 1 0 11.5 11.5 11.513 11.513 0 0 0-11.5-11.5Zm3.707 12.22-4.5 4.488A1 1 0 0 1 9.8 15.795l3.792-3.783L9.798 8.21a1 1 0 1 1 1.416-1.412l4.5 4.511a1 1 0 0 1-.002 1.414Z"></path>
+          </svg>
+        </div>
       </div>
       <Link to="/" className="cursor-pointer">
         <svg

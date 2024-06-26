@@ -1,9 +1,130 @@
 import { Link } from "react-router-dom";
 import ChatItem from "./ChatItem";
+import * as React from "react";
+import SockJS from "sockjs-client";
+import Stomp from "stompjs";
+import { getAllMessages } from "../../api/ChatAPI";
 
-function GroupChat({ id }) {
+export function GroupChat({ idDefault, idChat }) {
+  // check height of the screen
+  const [checkHeight, setCheckHeight] = React.useState(window.innerHeight);
+  const checkDivHeight = () => {
+    const newHeight = window.innerHeight;
+    setCheckHeight(newHeight);
+    const divChatDetail = document.getElementById("divChatDetail");
+    divChatDetail.style.height = newHeight - 150 + "px";
+    console.log(divChatDetail.offsetHeight);
+  };
+
+  React.useEffect(() => {
+    // Kiểm tra khi tải trang
+    checkDivHeight();
+
+    // Đăng ký sự kiện resize
+    window.addEventListener("resize", checkDivHeight);
+
+    // Cleanup: Hủy đăng ký sự kiện khi component bị unmount
+    return () => {
+      window.removeEventListener("resize", checkDivHeight);
+    };
+  }, [checkHeight]); // Phải có sharedWidth ở đây để useEffect lắng nghe sự thay đổi của nó
+
+  // message
+  const [stompClient, setStompClient] = React.useState(null);
+  const [messages, setMessages] = React.useState([]);
+  const [newMessage, setNewMessage] = React.useState("");
+
+  React.useEffect(() => {
+    const socket = new SockJS("http://localhost:8083/ws");
+    const client = Stomp.over(socket);
+
+    const connectClient = () => {
+      client.connect(
+        {},
+        () => {
+          console.log("Connected to WebSocket :D");
+          setStompClient(client);
+          subscribeToUserTopic(idChat);
+        },
+        (error) => {
+          console.error("Error connecting to WebSocket:", error);
+          setTimeout(connectClient, 500);
+        }
+      );
+    };
+
+    connectClient();
+
+    return () => {
+      if (stompClient) {
+        stompClient.disconnect(() => {
+          console.log("Disconnected from WebSocket");
+        });
+      }
+    };
+  }, [idChat]);
+
+  React.useEffect(() => {
+    const getData = async () => {
+      console.log("re-render");
+      if (idDefault.trim().length > 0) {
+        try {
+          const messages = await getAllMessages({
+            idChat: idChat,
+            pageNo: 0,
+            pageSize: 20,
+          });
+          setMessages((prevMessages) => [
+            ...messages.data.items,
+            ...prevMessages,
+          ]);
+        } catch (error) {
+          console.error(error);
+        }
+      }
+    };
+    getData();
+  }, [idDefault]);
+
+  const sendMessage = () => {
+    if (stompClient && stompClient.connected) {
+      // existed chat
+      const message = {
+        idChat: idChat,
+        content: newMessage,
+        idChatProfileSender: idDefault,
+        idChatProfileReceiver: null,
+      };
+      //not existed chat
+      // const message = {
+      //     idChat: null,
+      //     content: newMessage,
+      //     idChatProfileSender : '3dafe79f-387f-47c9-81c6-92a3812d15f4',
+      //     idChatProfileReceiver : 'd49f4403-c886-4475-b735-41eaef854ce7'
+      // };
+      stompClient.send("/app/messages", {}, JSON.stringify(message));
+      setNewMessage("");
+    }
+  };
+
+  const subscribeToUserTopic = (topic) => {
+    if (stompClient && stompClient.connected) {
+      stompClient.subscribe(`/user/${topic}/private`, (message) => {
+        console.log("Received private message:", message.body);
+        const receivedMessage = JSON.parse(message.body);
+        setMessages((prevMessages) => [receivedMessage, ...prevMessages]);
+      });
+    }
+  };
+
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter") {
+      sendMessage();
+    }
+  };
+
   return (
-    <div className="col-start-5 col-span-8">
+    <div className={`col-start-5 col-span-8 h-[${checkHeight}px]`}>
       <div className="flex items-center gap-4 p-4 border-b">
         <div className="cursor-pointer">
           <img
@@ -60,7 +181,7 @@ function GroupChat({ id }) {
         </div>
       </div>
 
-      <div className="px-4 pt-10 pb-6">
+      <div id="divChatDetail" className="px-4 pt-10 pb-6 overflow-auto">
         <div className="flex flex-col justify-center items-center mb-14">
           <img
             className="w-[96px] h-[96px] rounded-[50%] object-cover"
@@ -85,18 +206,29 @@ function GroupChat({ id }) {
         </div>
         <div className="mb-6">
           {/* 1 */}
-          <ChatItem left={true} content={"xin chao 2"} />
-          <ChatItem left={false} content={"xin chao 1"} />
-          <ChatItem left={false} content={"how are you"} />
+          {messages.map((message, index) => (
+            <ChatItem
+              key={index}
+              left={message.idChatProfileSender !== idDefault}
+              content={message.content}
+            />
+          ))}
         </div>
-        <div className="relative">
-          <input
-            type="text"
-            placeholder="Message..."
-            className="w-full border-[1px] px-4 py-2 rounded-[999px] outline-none"
-          />
-          <span className="absolute right-6 top-2 cursor-pointer text-[14px] text-[#0097f7] font-medium">Send</span>
-        </div>
+      </div>
+      <div className="relative mt-auto">
+        <input
+          onKeyDown={handleKeyPress}
+          onChange={(e) => setNewMessage(e.target.value)}
+          type="text"
+          placeholder="Message..."
+          className="w-full border-[1px] px-4 py-2 rounded-[999px] outline-none"
+        />
+        <span
+          onClick={sendMessage}
+          className="absolute right-6 top-2 cursor-pointer text-[14px] text-[#0097f7] font-medium"
+        >
+          Send
+        </span>
       </div>
     </div>
   );

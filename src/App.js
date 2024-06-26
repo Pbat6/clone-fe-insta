@@ -2,6 +2,7 @@ import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import { publicRoutes } from "./routes/Routes.index";
 import { DefaultLayout, MessageLayout, ProfileLayout } from "./components/Layouts/Layout.index";
 import { Fragment } from "react";
+import 'stories-react/dist/index.css';
 
 function App() {
   return (

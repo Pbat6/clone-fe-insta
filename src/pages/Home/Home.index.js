@@ -48,8 +48,8 @@ function Home() {
     <div ref={targetRef} class="container col-start-3 col-span-5 mt-4">
       <div class="flex items-center gap-x-3">
         {/* <!-- 1 --> */}
-        <Story />
-        <Story />
+        <Story storyId={1}/>
+        <Story storyId={2}/>
         <Story />
         <Story />
         <Story />

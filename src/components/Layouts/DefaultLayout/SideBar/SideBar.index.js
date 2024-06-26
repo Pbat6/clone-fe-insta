@@ -508,7 +508,7 @@ function SideBar() {
           </div>
           <div>
             <input
-              className="w-full border-none focus:outline-none rounded-md bg-slate-200"
+              className="w-full border-none focus:outline-none rounded-md bg-[#efefef] p-2"
               type="text"
               placeholder="Search"
             />

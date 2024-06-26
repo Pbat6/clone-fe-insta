@@ -7,7 +7,7 @@ import Story from "../pages/Story/Story.index";
 
 export const publicRoutes = [
     { path: "/", component: Home, layout: null },
-    { path: "/story", component: Story, layout: "" },
+    { path: "/story/:storyId", component: Story, layout: "" },
     { path: "/chat", component: Chat, layout: "Chat" },
     { path: "/profile", component: Profile, layout: "Profile" },
     { path: "/register", component: Register, layout: "" },

@@ -1,4 +1,4 @@
-import SideBar from "./SideBar/SideBar.index";
+import SideBar from "../DefaultLayout/SideBar/SideBar.index";
 
 function ProfileLayout({ children }) {
   return (

@@ -5,7 +5,7 @@ function SideBar() {
   const targetRef = useRef(null);
   const checkDivWidth = () => {
     const targetDiv = targetRef.current;
-    const minWidth = 240; // Đặt độ rộng tối thiểu tại đây
+    const minWidth = 700; // Đặt độ rộng tối thiểu tại đây
 
     const textLogo = document.getElementById("text-logo");
     const imageLogo = document.getElementById("image-logo");
@@ -55,7 +55,7 @@ function SideBar() {
   }, []);
 
   return (
-    <div ref={targetRef} className="col-start-1 col-span-2">
+    <div ref={targetRef} className="col-start-1 col-span-1">
       <div className="fixed">
         <div
           id="wrap"
