@@ -43,25 +43,27 @@ function Chat() {
 
   const [friends, setFriends] = React.useState([]);
   const [idChat, setIdChat] = React.useState("");
-  const [myId, setMyId] = React.useState("");
+  const [myId, setMyId] = React.useState("3dafe79f-387f-47c9-81c6-92a3812d15f4");
 
-  // React.useEffect(() => {
-  //   const getListFriends = async () => {
-  //     if (myId.trim().length > 0) {
-  //       try {
-  //         const friends = await getAllFriends({
-  //           myId: myId,
-  //           pageNo: 0,
-  //           pageSize: 20,
-  //         });
-  //         setFriends((prevFriends) => [...friends.data.items, ...prevFriends]);
-  //       } catch (error) {
-  //         console.error(error);
-  //       }
-  //     }
-  //   };
-  //   getListFriends();
-  // }, []);
+  React.useEffect(() => {
+    const getListFriends = async () => {
+      if (myId.trim().length > 0) {
+        try {
+          console.log('---------')
+          const friends = await getAllFriends({
+            myId: '3dafe79f-387f-47c9-81c6-92a3812d15f4',
+            pageNo: 0,
+            pageSize: 20,
+          });
+          console.log(friends.data.data.items)
+          setFriends((prevFriends) => [...friends.data.data.items, ...prevFriends]);
+        } catch (error) {
+          console.error(error);
+        }
+      }
+    };
+    getListFriends();
+  }, []);
 
   return (
     <React.Fragment>
@@ -138,40 +140,23 @@ function Chat() {
           </div>
 
           <div id="divFriend" className={`w-full overflow-auto`}>
-            <div class="cursor-pointer hover:bg-slate-50">
-              <div class="flex items-center py-[8px] gap-x-4">
-                <div className="relative">
-                  <img
-                    class="w-[56px] h-[56px] object-cover rounded-[50%]"
-                    src="https://letsenhance.io/static/8f5e523ee6b2479e26ecc91b9c25261e/1015f/MainAfter.jpg"
-                    alt=""
-                  />
-                  <div className="w-3 h-3 bg-green-500 rounded-[50%] absolute bottom-1 right-0"></div>
-                </div>
-                <div class="flex flex-col">
-                  <span class="text-[14px]">Pbat</span>
-                </div>
-              </div>
-            </div>
+            {/* <input
+              onChange={(e) => setMyId(e.target.value)}
+              className="border-black outline-none border-[1px]"
+              type="text"
+              placeholder="myId"
+            />
 
-            <div class="cursor-pointer hover:bg-slate-50">
-              <div class="flex items-center py-[8px] gap-x-4">
-                <div className="relative">
-                  <img
-                    class="w-[56px] h-[56px] object-cover rounded-[50%]"
-                    src="https://letsenhance.io/static/8f5e523ee6b2479e26ecc91b9c25261e/1015f/MainAfter.jpg"
-                    alt=""
-                  />
-                  <div className="w-3 h-3 bg-green-500 rounded-[50%] absolute bottom-1 right-0 hidden"></div>
-                </div>
-                <div class="flex flex-col">
-                  <span class="text-[14px]">Pbat</span>
-                </div>
-              </div>
-            </div>
-
-            {/* {friends.map((friend, index) => {
-              <div
+            <input
+              onChange={(e) => setIdChat(e.target.value)}
+              className="border-black outline-none border-[1px]"
+              type="text"
+              placeholder="IdChat"
+            /> */}
+            {friends.map((friend, index) => {
+              // console.log(friend.chatName)
+              return(
+                <div
                 key={index}
                 onClick={() => setIdChat(friend.idChat)}
                 class="cursor-pointer hover:bg-slate-50"
@@ -189,8 +174,9 @@ function Chat() {
                     <span class="text-[12px]">Active 6m ago</span>
                   </div>
                 </div>
-              </div>;
-            })} */}
+              </div>
+              )
+            })}
           </div>
         </div>
 

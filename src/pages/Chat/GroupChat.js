@@ -33,7 +33,6 @@ export function GroupChat({ idDefault, idChat }) {
   const [stompClient, setStompClient] = React.useState(null);
   const [messages, setMessages] = React.useState([]);
   const [newMessage, setNewMessage] = React.useState("");
-
   React.useEffect(() => {
     const socket = new SockJS("http://localhost:8083/ws");
     const client = Stomp.over(socket);
@@ -44,7 +43,10 @@ export function GroupChat({ idDefault, idChat }) {
         () => {
           console.log("Connected to WebSocket :D");
           setStompClient(client);
-          subscribeToUserTopic(idChat);
+          // if(idChat){
+          //   console.log('idChat exists')
+          //   subscribeToUserTopic(idChat);
+          // }
         },
         (error) => {
           console.error("Error connecting to WebSocket:", error);
@@ -63,6 +65,8 @@ export function GroupChat({ idDefault, idChat }) {
       }
     };
   }, [idChat]);
+  
+  
 
   React.useEffect(() => {
     const getData = async () => {
@@ -74,8 +78,10 @@ export function GroupChat({ idDefault, idChat }) {
             pageNo: 0,
             pageSize: 20,
           });
+          console.log(messages)
+
           setMessages((prevMessages) => [
-            ...messages.data.items,
+            ...messages.data.data.items,
             ...prevMessages,
           ]);
         } catch (error) {
@@ -84,7 +90,14 @@ export function GroupChat({ idDefault, idChat }) {
       }
     };
     getData();
-  }, [idDefault]);
+  }, []);
+
+  React.useEffect(() => {
+    if(idChat){
+      console.log('idChat exists-------stompClient')
+      subscribeToUserTopic(idChat);
+    }
+  }, [stompClient]);
 
   const sendMessage = () => {
     if (stompClient && stompClient.connected) {
@@ -108,14 +121,30 @@ export function GroupChat({ idDefault, idChat }) {
   };
 
   const subscribeToUserTopic = (topic) => {
+    console.log("-------------")
+    console.log(stompClient)
     if (stompClient && stompClient.connected) {
       stompClient.subscribe(`/user/${topic}/private`, (message) => {
-        console.log("Received private message:", message.body);
+        console.log("Subscribe")
         const receivedMessage = JSON.parse(message.body);
-        setMessages((prevMessages) => [receivedMessage, ...prevMessages]);
+        console.log("Received private message:", message);
+        console.log("Received private message:", receivedMessage);
+        console.log("Received private message:", receivedMessage.content);
+
+        setMessages((prevMessages) => [ ...prevMessages,receivedMessage]);
+
+
+        // setMessages((prevMessages) => [receivedMessage, ...prevMessages]);
       });
     }
   };
+
+
+
+  
+
+
+
 
   const handleKeyPress = (event) => {
     if (event.key === "Enter") {
@@ -207,6 +236,7 @@ export function GroupChat({ idDefault, idChat }) {
         <div className="mb-6">
           {/* 1 */}
           {messages.map((message, index) => (
+            // console.log(message)
             <ChatItem
               key={index}
               left={message.idChatProfileSender !== idDefault}
