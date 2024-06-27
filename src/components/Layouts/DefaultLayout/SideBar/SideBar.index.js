@@ -91,6 +91,20 @@ function SideBar() {
   const openNotification = Boolean(anchorElNotification);
   const idNotification = openNotification ? "simple-popover" : undefined;
 
+  // popover More
+  const [anchorElMore, setAnchorElMore] = React.useState(null);
+
+  const handleClickMore = (event) => {
+    setAnchorElMore(event.currentTarget);
+  };
+
+  const handleCloseMore = () => {
+    setAnchorElMore(null);
+  };
+
+  const openMore = Boolean(anchorElMore);
+  const idMore = openMore ? "simple-popover" : undefined;
+
   // Create
   const [openCreate, setOpenCreate] = React.useState(false);
 
@@ -293,52 +307,55 @@ function SideBar() {
           </Link>
 
           {/* <!-- Notifications --> */}
-          <Button
-            aria-describedby={idNotification}
-            variant="contained"
-            onClick={handleClickNotification}
-            sx={{
-              fontWeight: "600",
-              width: "100%",
-              padding: "12px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "left",
-              columnGap: "16px",
-              borderRadius: "8px",
-              cursor: "pointer",
-              backgroundColor: "#fff",
-              boxShadow: "none",
-              border: "none",
-              lineHeight: "0",
-              fontWeight: "400",
-              letterSpacing: "0px",
-              textTransform: "none",
-              minWidth: "0",
-              color: "black",
-              ":hover": {
-                border: "none",
-                backgroundColor: "#f2f2f2",
+          <div className="relative">
+            <Button
+              aria-describedby={idNotification}
+              variant="contained"
+              onClick={handleClickNotification}
+              sx={{
+                fontWeight: "600",
+                width: "100%",
+                padding: "12px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "left",
+                columnGap: "16px",
+                borderRadius: "8px",
+                cursor: "pointer",
+                backgroundColor: "#fff",
                 boxShadow: "none",
-              },
-            }}
-          >
-            <svg
-              aria-label="Notifications"
-              className="x1lliihq x1n2onr6 x5n08af"
-              fill="currentColor"
-              height="24"
-              role="img"
-              viewBox="0 0 24 24"
-              width="24"
+                border: "none",
+                lineHeight: "0",
+                fontWeight: "400",
+                letterSpacing: "0px",
+                textTransform: "none",
+                minWidth: "0",
+                color: "black",
+                ":hover": {
+                  border: "none",
+                  backgroundColor: "#f2f2f2",
+                  boxShadow: "none",
+                },
+              }}
             >
-              <title>Notifications</title>
-              <path d="M16.792 3.904A4.989 4.989 0 0 1 21.5 9.122c0 3.072-2.652 4.959-5.197 7.222-2.512 2.243-3.865 3.469-4.303 3.752-.477-.309-2.143-1.823-4.303-3.752C5.141 14.072 2.5 12.167 2.5 9.122a4.989 4.989 0 0 1 4.708-5.218 4.21 4.21 0 0 1 3.675 1.941c.84 1.175.98 1.763 1.12 1.763s.278-.588 1.11-1.766a4.17 4.17 0 0 1 3.679-1.938m0-2a6.04 6.04 0 0 0-4.797 2.127 6.052 6.052 0 0 0-4.787-2.127A6.985 6.985 0 0 0 .5 9.122c0 3.61 2.55 5.827 5.015 7.97.283.246.569.494.853.747l1.027.918a44.998 44.998 0 0 0 3.518 3.018 2 2 0 0 0 2.174 0 45.263 45.263 0 0 0 3.626-3.115l.922-.824c.293-.26.59-.519.885-.774 2.334-2.025 4.98-4.32 4.98-7.94a6.985 6.985 0 0 0-6.708-7.218Z"></path>
-            </svg>
-            <p id="text-notification" className="text-[16px]">
-              Notifications
-            </p>
-          </Button>
+              <svg
+                aria-label="Notifications"
+                className="x1lliihq x1n2onr6 x5n08af"
+                fill="currentColor"
+                height="24"
+                role="img"
+                viewBox="0 0 24 24"
+                width="24"
+              >
+                <title>Notifications</title>
+                <path d="M16.792 3.904A4.989 4.989 0 0 1 21.5 9.122c0 3.072-2.652 4.959-5.197 7.222-2.512 2.243-3.865 3.469-4.303 3.752-.477-.309-2.143-1.823-4.303-3.752C5.141 14.072 2.5 12.167 2.5 9.122a4.989 4.989 0 0 1 4.708-5.218 4.21 4.21 0 0 1 3.675 1.941c.84 1.175.98 1.763 1.12 1.763s.278-.588 1.11-1.766a4.17 4.17 0 0 1 3.679-1.938m0-2a6.04 6.04 0 0 0-4.797 2.127 6.052 6.052 0 0 0-4.787-2.127A6.985 6.985 0 0 0 .5 9.122c0 3.61 2.55 5.827 5.015 7.97.283.246.569.494.853.747l1.027.918a44.998 44.998 0 0 0 3.518 3.018 2 2 0 0 0 2.174 0 45.263 45.263 0 0 0 3.626-3.115l.922-.824c.293-.26.59-.519.885-.774 2.334-2.025 4.98-4.32 4.98-7.94a6.985 6.985 0 0 0-6.708-7.218Z"></path>
+              </svg>
+              <p id="text-notification" className="text-[16px]">
+                Notifications
+              </p>
+            </Button>
+            <div className="w-2 h-2 bg-red-600 rounded-[50%] absolute top-3 left-7"></div>
+          </div>
 
           {/* <!-- Creates --> */}
           <Button
@@ -432,7 +449,10 @@ function SideBar() {
           </Link>
 
           {/* <!-- More --> */}
-          <div className="w-full p-[12px] flex gap-x-[16px] items-center hover:bg-[#f2f2f2] rounded-[8px] cursor-pointer mt-[30px]">
+          <div
+            onClick={handleClickMore}
+            className="mt-auto w-full p-[12px] flex gap-x-[16px] items-center hover:bg-[#f2f2f2] rounded-[8px] cursor-pointer"
+          >
             <svg
               aria-label="Settings"
               className="x1lliihq x1n2onr6 x5n08af"
@@ -526,6 +546,7 @@ function SideBar() {
         </div>
       </Popover>
 
+      {/* notification */}
       <Popover
         id={idNotification}
         open={openNotification}
@@ -554,6 +575,29 @@ function SideBar() {
             <Following name={"Chi"} />
             <Following name={"asdhiasdiusadiasgdiasgdisag"} />
           </div>
+        </div>
+      </Popover>
+
+      {/* more */}
+      <Popover
+        id={idMore}
+        open={openMore}
+        anchorEl={anchorElMore}
+        onClose={handleCloseMore}
+        anchorOrigin={{
+          vertical: "center",
+          horizontal: "right",
+        }}
+        transformOrigin={{
+          vertical: "center",
+          horizontal: "left",
+        }}
+        sx={{
+          marginLeft: "1rem",
+        }}
+      >
+        <div className="w-[180px] h-[50px] flex items-center justify-center cursor-pointer hover:bg-[#efefef]">
+          <span className="text-base mb-1 font-medium">Log out</span>
         </div>
       </Popover>
 

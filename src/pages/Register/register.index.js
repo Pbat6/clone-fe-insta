@@ -2,13 +2,47 @@ import { TextField } from "@mui/material";
 import { useState } from "react";
 import DatePicker from "react-date-picker";
 import { Link } from "react-router-dom";
+import { createAccount } from "../../api/AccountAPI";
 
 function Register() {
-  const [value, onChange] = useState();
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const [fullName, setFullName] = useState("");
+
+  // gender
+  const [selectedGender, setSelectedGender] = useState("");
+
+  const handleGenderChange = (event) => {
+    console.log(event.target.value); // M or F
+    setSelectedGender(event.target.value);
+  };
+
+  // date
+  const [dateValue, setDateValue] = useState();
 
   const handleDateChange = (date) => {
-    onChange(date);
+    setDateValue(date);
   };
+
+  // create user
+  const handleCreateUser = () => {
+    createAccount({
+      username,
+      password,
+      email,
+      fullName,
+      selectedGender,
+      dateValue,
+    })
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
   return (
     <div className="w-screen h-screen flex items-center justify-center">
       <div className="flex items-center justify-center border-[1px] w-[400px] shadow-2xl">
@@ -31,38 +65,38 @@ function Register() {
               }}
             ></i>
           </div>
-          <form action="#">
+          <form>
             <div className="mt-6 flex flex-col items-center gap-y-[8px]">
               <input
                 type="text"
-                className="focus:outline-none focus:border-none rounded-sm h-[38px] w-[260px] border-[1px] border-[#dbdbdb] bg-[#fffefe] p-[8px] pb-[10px] text-[12px] placeholder:text-[12px] placeholder:text-[#737373]"
+                className="focus:outline-none rounded-sm h-[38px] w-[260px] border-[1px] border-[#dbdbdb] bg-[#fffefe] p-[8px] pb-[10px] text-sm placeholder:text-sm placeholder:text-[#737373]"
                 placeholder="Username"
+                onChange={(e) => setUsername(e.target.value)}
               />
               <input
                 type="text"
-                className="focus:outline-none focus:border-none rounded-sm h-[38px] w-[260px] border-[1px] border-[#dbdbdb] bg-[#fffefe] p-[8px] pb-[10px] text-[12px] placeholder:text-[12px] placeholder:text-[#737373]"
+                className="focus:outline-none rounded-sm h-[38px] w-[260px] border-[1px] border-[#dbdbdb] bg-[#fffefe] p-[8px] pb-[10px] text-sm placeholder:text-sm placeholder:text-[#737373]"
                 placeholder="Password"
+                onChange={(e) => setPassword(e.target.value)}
               />
               <input
                 type="text"
-                className="focus:outline-none focus:border-none rounded-sm h-[38px] w-[260px] border-[1px] border-[#dbdbdb] bg-[#fffefe] p-[8px] pb-[10px] text-[12px] placeholder:text-[12px] placeholder:text-[#737373]"
+                className="focus:outline-none rounded-sm h-[38px] w-[260px] border-[1px] border-[#dbdbdb] bg-[#fffefe] p-[8px] pb-[10px] text-sm placeholder:text-sm placeholder:text-[#737373]"
                 placeholder="Email"
+                onChange={(e) => setEmail(e.target.value)}
               />
               <input
                 type="text"
-                className="focus:outline-none focus:border-none rounded-sm h-[38px] w-[260px] border-[1px] border-[#dbdbdb] bg-[#fffefe] p-[8px] pb-[10px] text-[12px] placeholder:text-[12px] placeholder:text-[#737373]"
+                className="focus:outline-none rounded-sm h-[38px] w-[260px] border-[1px] border-[#dbdbdb] bg-[#fffefe] p-[8px] pb-[10px] text-sm placeholder:text-sm placeholder:text-[#737373]"
                 placeholder="Full Name"
+                onChange={(e) => setFullName(e.target.value)}
               />
-              <input
-                type="text"
-                className="focus:outline-none focus:border-none rounded-sm h-[38px] w-[260px] border-[1px] border-[#dbdbdb] bg-[#fffefe] p-[8px] pb-[10px] text-[12px] placeholder:text-[12px] placeholder:text-[#737373]"
-                placeholder="Password"
-              />
-
               <div className="h-[38px] w-[260px] bg-[#fffefe]">
                 <select
-                  id="countries"
-                  class=" border border-gray-300 text-gray-900 text-sm rounded-sm focus:border-[#dbdbdb] block w-full p-2.5 "
+                  id="gender"
+                  value={selectedGender}
+                  onChange={handleGenderChange}
+                  class=" border border-gray-300 text-gray-900 text-sm rounded-sm focus:border-[#dbdbdb] block w-full h-full"
                 >
                   <option selected>Gender</option>
                   <option value="M">Male</option>
@@ -77,20 +111,17 @@ function Register() {
                   yearPlaceholder="yyyy"
                   className="h-[38px] w-[260px] "
                   onChange={handleDateChange}
-                  value={value}
+                  value={dateValue}
                 />
               </div>
             </div>
             <span
-              onSubmit="#"
-              className="flex justify-center items-center mt-[35px] w-[260px] h-[32px] bg-[#4cb5f9] ml-[50%] translate-x-[-50%] cursor-pointer text-[#e2f3fe] font-medium hover:bg-[#1877f2] hover:text-[#f0f8f6] rounded-[8px]"
+              onClick={handleCreateUser}
+              className="flex justify-center items-center mt-[35px] w-[260px] h-[36px] bg-[#4cb5f9] ml-[50%] translate-x-[-50%] cursor-pointer text-[#e2f3fe] font-medium hover:bg-[#1877f2] hover:text-[#f0f8f6] rounded-[8px]"
             >
               Sign up
             </span>
           </form>
-          <span className="block text-[12px] text-[#00376b] mt-[20px] w-[260px] ml-[50%] translate-x-[-50%] text-center cursor-pointer">
-            Forgot password?
-          </span>
           <div className="flex items-center justify-center gap-x-2 text-[14px] mt-4">
             <span>Have an account?</span>
             <Link to="/login" className="font-medium text-[#0095f6]">

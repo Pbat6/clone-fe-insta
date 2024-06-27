@@ -1,6 +1,23 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
+import { login } from "../../api/AccountAPI";
 
 function Login() {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleLogin = () => {
+    login({ username, password })
+      .then((response) => {
+        console.log("Login success");
+        localStorage.setItem("token", response.data.token);
+      })
+      .catch((error) => {
+        console.log("Login failed");
+        console.error(error);
+      });
+  };
+
   return (
     <div className="w-screen h-screen flex items-center justify-center">
       <div className="flex items-center justify-center border-[1px] w-[400px] shadow-2xl">
@@ -23,21 +40,23 @@ function Login() {
               }}
             ></i>
           </div>
-          <form action="#">
+          <form>
             <div className="mt-6 flex flex-col items-center gap-y-[8px]">
               <input
                 type="text"
+                onChange={(e) => setUsername(e.target.value)}
                 className="h-[38px] w-[260px] border-[1px] border-[#dbdbdb] bg-[#f5f5f5] p-[8px] pb-[10px] text-[12px] placeholder:text-[12px] placeholder:text-[#737373] focus:outline-none focus:border"
                 placeholder="Phone number, username or email"
               />
               <input
                 type="text"
+                onChange={(e) => setPassword(e.target.value)}
                 className="h-[38px] w-[260px] border-[1px] border-[#dbdbdb] bg-[#f5f5f5] p-[8px] pb-[10px] text-[12px] placeholder:text-[12px] placeholder:text-[#737373] focus:outline-none focus:border"
                 placeholder="Password"
               />
             </div>
             <span
-              onSubmit="#"
+              onClick={handleLogin}
               className="flex justify-center items-center mt-[35px] w-[260px] h-[32px] bg-[#4cb5f9] ml-[50%] translate-x-[-50%] cursor-pointer text-[#e2f3fe] font-medium hover:bg-[#1877f2] hover:text-[#f0f8f6] rounded-[8px]"
             >
               Log in
@@ -48,7 +67,9 @@ function Login() {
           </span>
           <div className="flex items-center justify-center gap-x-2 text-[14px] my-4">
             <span>Don't have an account?</span>
-            <Link to="/register" className="font-medium text-[#0095f6]">Sign up</Link>
+            <Link to="/register" className="font-medium text-[#0095f6]">
+              Sign up
+            </Link>
           </div>
         </div>
       </div>

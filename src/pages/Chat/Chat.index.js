@@ -138,19 +138,38 @@ function Chat() {
           </div>
 
           <div id="divFriend" className={`w-full overflow-auto`}>
-            <input
-              onChange={(e) => setMyId(e.target.value)}
-              className="border-black outline-none border-[1px]"
-              type="text"
-              placeholder="myId"
-            />
+            <div class="cursor-pointer hover:bg-slate-50">
+              <div class="flex items-center py-[8px] gap-x-4">
+                <div className="relative">
+                  <img
+                    class="w-[56px] h-[56px] object-cover rounded-[50%]"
+                    src="https://letsenhance.io/static/8f5e523ee6b2479e26ecc91b9c25261e/1015f/MainAfter.jpg"
+                    alt=""
+                  />
+                  <div className="w-3 h-3 bg-green-500 rounded-[50%] absolute bottom-1 right-0"></div>
+                </div>
+                <div class="flex flex-col">
+                  <span class="text-[14px]">Pbat</span>
+                </div>
+              </div>
+            </div>
 
-            <input
-              onChange={(e) => setIdChat(e.target.value)}
-              className="border-black outline-none border-[1px]"
-              type="text"
-              placeholder="IdChat"
-            />
+            <div class="cursor-pointer hover:bg-slate-50">
+              <div class="flex items-center py-[8px] gap-x-4">
+                <div className="relative">
+                  <img
+                    class="w-[56px] h-[56px] object-cover rounded-[50%]"
+                    src="https://letsenhance.io/static/8f5e523ee6b2479e26ecc91b9c25261e/1015f/MainAfter.jpg"
+                    alt=""
+                  />
+                  <div className="w-3 h-3 bg-green-500 rounded-[50%] absolute bottom-1 right-0 hidden"></div>
+                </div>
+                <div class="flex flex-col">
+                  <span class="text-[14px]">Pbat</span>
+                </div>
+              </div>
+            </div>
+
             {/* {friends.map((friend, index) => {
               <div
                 key={index}
