@@ -19,7 +19,7 @@ function Register() {
   };
 
   // date
-  const [dateValue, setDateValue] = useState();
+  const [dateValue, setDateValue] = useState(new Date());
 
   const handleDateChange = (date) => {
     setDateValue(date);
@@ -109,7 +109,6 @@ function Register() {
                   dayPlaceholder="dd"
                   monthPlaceholder="mm"
                   yearPlaceholder="yyyy"
-                  className="h-[38px] w-[260px] "
                   onChange={handleDateChange}
                   value={dateValue}
                 />

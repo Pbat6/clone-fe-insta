@@ -26,3 +26,10 @@ export async function login({ username, password }) {
     username: username,
   });
 }
+
+export async function checkToken({ token }) {
+  const url = `http://localhost:?/api/v1/auth/token/introspect`;
+  return await axios.post(url, {
+    token: token,
+  });
+}

@@ -9,6 +9,10 @@ import { Link } from "react-router-dom";
 import * as React from "react";
 import Search from "./Search";
 import Following from "./Following";
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+import { getMessaging, getToken, onMessage } from "firebase/messaging";
+import { firebaseConfig } from "../../../../FireBase/firebase-config";
 
 function SideBar() {
   const targetRef = React.useRef(null);
@@ -127,6 +131,54 @@ function SideBar() {
       reader.readAsDataURL(e.target.files[0]);
     }
   };
+
+  // firebase notification
+  const [notifications, setNotifications] = React.useState([]);
+  const [currentToken, setCurrentToken] = React.useState(null);
+
+  React.useEffect(() => {
+    const initializeFirebaseApp = async () => {
+      try {
+        const app = initializeApp(firebaseConfig);
+        getAnalytics(app);
+        const messaging = getMessaging(app);
+
+        // Lấy token của thiết bị
+        //public key
+        const token = await getToken(messaging, {
+          vapidKey:
+            "BNS3T9KrSq2f8xi8XQDkmwvQ1rLkPRkgwwhYQKaXnCgvpz5fHKYAemxu96gtiv6In6ZdKW6qv0fGDKNvlihO_vM", // Thay thế bằng khóa VAPID của bạn
+        });
+
+        if (token) {
+          console.log("Token thiết bị:", token);
+          setCurrentToken(token);
+        } else {
+          console.log("Không thể lấy được token.");
+        }
+
+        // Lắng nghe các thông báo đến khi ứng dụng đang mở
+        onMessage(messaging, (payload) => {
+          console.log("Thông báo đến khi ứng dụng đang mở:", payload);
+          if (payload.data?.message) {
+            setNotifications((prevNotifications) => [
+              ...prevNotifications,
+              { message: payload.data.message }, // Sử dụng dấu chấm than để nói với TypeScript rằng giá trị này không phải là undefined
+            ]);
+          }
+        });
+
+        console.log("Đã khởi tạo Firebase và lắng nghe thông báo.");
+      } catch (error) {
+        console.error(
+          "Lỗi khi khởi tạo Firebase và lắng nghe thông báo:",
+          error
+        );
+      }
+    };
+
+    initializeFirebaseApp();
+  }, []);
 
   return (
     <div ref={targetRef} className="col-start-1 col-span-2">
@@ -572,8 +624,9 @@ function SideBar() {
             <span className="text-base font-medium">New</span>
           </div>
           <div className="mt-2">
-            <Following name={"Chi"} />
-            <Following name={"asdhiasdiusadiasgdiasgdisag"} />
+            {notifications.map((notification, index) => (
+              <Following index={index} name={notification.message} />
+            ))}
           </div>
         </div>
       </Popover>

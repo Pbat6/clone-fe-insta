@@ -1,16 +1,18 @@
 import { Button, Dialog, DialogContent } from "@mui/material";
 import * as React from "react";
 import CommentDetail from "../Home/CommentDetail";
+import DatePicker from "react-date-picker";
+import styles from "./index.css";
 
 function Profile() {
-  const [open, setOpen] = React.useState(false);
+  const [openEditProfile, setOpenEditProfile] = React.useState(false);
 
-  const handleClickOpen = () => {
-    setOpen(true);
+  const handleClickOpenEditProfile = () => {
+    setOpenEditProfile(true);
   };
 
-  const handleClose = () => {
-    setOpen(false);
+  const handleCloseEditProfile = () => {
+    setOpenEditProfile(false);
   };
 
   // Click image to view all comments
@@ -50,6 +52,43 @@ function Profile() {
     setTempInputContent("");
   };
 
+  // edit profile
+  const [username, setUsername] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  const [email, setEmail] = React.useState("");
+  const [fullName, setFullName] = React.useState("");
+
+  // gender
+  const [selectedGender, setSelectedGender] = React.useState("");
+
+  const handleGenderChange = (event) => {
+    console.log(event.target.value); // M or F
+    setSelectedGender(event.target.value);
+  };
+
+  // date
+  const [dateValue, setDateValue] = React.useState(new Date());
+
+  const handleDateChange = (e) => {
+    console.log(new Date(e.target.value));
+    setDateValue(e.target.value);
+  };
+
+  // file
+  const fileInputRef = React.useRef(null);
+
+  const handleClickFile = () => {
+    fileInputRef.current.click();
+  };
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      console.log("Selected file:", file);
+      // Thực hiện các xử lý khác với file ảnh ở đây
+    }
+  };
+
   return (
     <div className="col-start-3 col-span-8 p-8 flex justify-center">
       <div className="w-[930px]">
@@ -66,7 +105,7 @@ function Profile() {
 
               <Button
                 variant="outlined"
-                onClick={handleClickOpen}
+                onClick={handleClickOpenEditProfile}
                 sx={{
                   fontSize: "14px",
                   color: "black",
@@ -269,11 +308,12 @@ function Profile() {
       </div>
 
       <Dialog
-        open={open}
-        onClose={handleClose}
+        open={openEditProfile}
+        onClose={handleCloseEditProfile}
         sx={{
           "& .MuiDialog-paper": {
             borderRadius: "8px",
+            maxWidth: "none",
           },
         }}
       >
@@ -282,7 +322,109 @@ function Profile() {
             padding: "0",
           }}
         >
-          <div className="flex items-center justify-center"></div>
+          <div className="w-[700px] h-[750px] p-8">
+            <div className="flex items-center p-4 border-[1px] rounded-xl">
+              <div>
+                <img
+                  className="w-[56px] h-[56px] rounded-[50%] object-cover"
+                  src="https://letsenhance.io/static/8f5e523ee6b2479e26ecc91b9c25261e/1015f/MainAfter.jpg"
+                />
+              </div>
+              <div className="flex flex-col ml-4">
+                <span className="text-base font-medium">The</span>
+                <span className="text-base">_Pbat</span>
+              </div>
+              <div className="ml-auto">
+                <span
+                  onClick={handleClickFile}
+                  className="p-2 bg-blue-500 rounded-md text-white font-medium cursor-pointer"
+                >
+                  Change Photo
+                </span>
+              </div>
+              <input
+                type="file"
+                accept="image/*"
+                ref={fileInputRef}
+                className="hidden"
+                onChange={handleFileChange}
+              />
+            </div>
+            <div className="mt-6 flex flex-col gap-y-4">
+              <div className="flex flex-col gap-y-2">
+                <span className="text-base font-semibold">Username</span>
+                <input
+                  type="text"
+                  value={username}
+                  className="focus:outline-none rounded-xl h-[38px] border-[1px] border-[#dbdbdb] bg-[#fffefe] p-[8px] pb-[10px] text-sm placeholder:text-sm placeholder:text-[#737373]"
+                  placeholder="Username"
+                  onChange={(e) => setUsername(e.target.value)}
+                />
+              </div>
+
+              <div className="flex flex-col gap-y-2">
+                <span className="text-base font-semibold">Bio</span>
+                <input
+                  type="text"
+                  value={"bio"}
+                  className="focus:outline-none rounded-xl h-[38px] border-[1px] border-[#dbdbdb] bg-[#fffefe] p-[8px] pb-[10px] text-sm placeholder:text-sm placeholder:text-[#737373]"
+                  placeholder="Bio"
+                  onChange={(e) => console.log(e.target.value)}
+                />
+              </div>
+
+              <div className="flex flex-col gap-y-2">
+                <span className="text-base font-semibold">Email</span>
+                <input
+                  type="text"
+                  value={email}
+                  className="focus:outline-none rounded-xl h-[38px] border-[1px] border-[#dbdbdb] bg-[#fffefe] p-[8px] pb-[10px] text-sm placeholder:text-sm placeholder:text-[#737373]"
+                  placeholder="Email"
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
+
+              <div className="flex flex-col gap-y-2">
+                <span className="text-base font-semibold">Full Name</span>
+                <input
+                  type="text"
+                  value={fullName}
+                  className="focus:outline-none rounded-xl h-[38px] border-[1px] border-[#dbdbdb] bg-[#fffefe] p-[8px] pb-[10px] text-sm placeholder:text-sm placeholder:text-[#737373]"
+                  placeholder="Full Name"
+                  onChange={(e) => setFullName(e.target.value)}
+                />
+              </div>
+
+              <div className="flex flex-col gap-y-2">
+                <span className="text-base font-semibold">Gender</span>
+                <select
+                  name="gender"
+                  id="gender"
+                  className="outline-none h-[38px] border-[1px] rounded-xl bg-[#fffefe] p-[8px] pb-[10px] text-sm"
+                  value={"F"} // selected M or F
+                  onChange={handleGenderChange}
+                >
+                  <option value="M">Male</option>
+                  <option value="F">Female</option>
+                </select>
+              </div>
+
+              <div className="flex flex-col gap-y-2">
+                <span className="text-base font-semibold">Date Of Birth</span>
+                <input
+                  type="date"
+                  className="w-full border-[1px] h-[38px]"
+                  value={dateValue} //"2021-12-14"
+                  onChange={handleDateChange}
+                />
+              </div>
+            </div>
+            <div className="flex items-center justify-center mt-6">
+              <span className="px-28 py-3 bg-blue-500 rounded-xl cursor-pointer text-white font-semibold">
+                Submit
+              </span>
+            </div>
+          </div>
         </DialogContent>
       </Dialog>
 

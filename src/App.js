@@ -3,6 +3,8 @@ import { publicRoutes } from "./routes/Routes.index";
 import { DefaultLayout, MessageLayout, ProfileLayout } from "./components/Layouts/Layout.index";
 import { Fragment } from "react";
 import 'stories-react/dist/index.css';
+import 'react-date-picker/dist/DatePicker.css';
+import 'react-calendar/dist/Calendar.css';
 
 function App() {
   return (

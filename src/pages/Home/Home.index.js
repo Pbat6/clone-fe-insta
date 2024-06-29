@@ -2,22 +2,13 @@ import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import * as React from "react";
 import { Button, Dialog, DialogContent, Tooltip } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { MyContext } from "../../components/Layouts/DefaultLayout";
 import Post from "./Post";
 import Story from "./Story";
+import { checkToken } from "../../api/AccountAPI";
 
 function Home() {
-  const [open, setOpen] = React.useState(false);
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
   // check width of the screen
   const { setShareWidth } = React.useContext(MyContext);
   const targetRef = React.useRef(null);
@@ -42,14 +33,12 @@ function Home() {
     };
   }, []);
 
-  
-
   return (
     <div ref={targetRef} class="container col-start-3 col-span-5 mt-4">
       <div class="flex items-center gap-x-3">
         {/* <!-- 1 --> */}
-        <Story storyId={1}/>
-        <Story storyId={2}/>
+        <Story storyId={1} />
+        <Story storyId={2} />
         <Story />
         <Story />
         <Story />
@@ -57,10 +46,10 @@ function Home() {
       </div>
 
       {/* Post */}
-      <Post/>
-      <Post/>
-      <Post/>
-      <Post/>
+      <Post />
+      <Post />
+      <Post />
+      <Post />
     </div>
   );
 }
