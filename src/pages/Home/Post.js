@@ -4,6 +4,13 @@ import * as React from "react";
 import Thumb from "./Thumb";
 import { Link } from "react-router-dom";
 import CommentDetail from "./CommentDetail";
+import {
+  countLike,
+  createNewComment,
+  getAllComment,
+  likePost,
+  unlikePost,
+} from "../../api/PostAPI";
 
 // Custom tooltip
 export const CustomTooltip = styled(({ className, ...props }) => (
@@ -15,7 +22,7 @@ export const CustomTooltip = styled(({ className, ...props }) => (
   },
 });
 
-function Post() {
+function Post({ post }) {
   // dialog more option
   const [openMoreOption, setOpenMoreOption] = React.useState(false);
 
@@ -53,9 +60,13 @@ function Post() {
 
   // Comment Dialog
   const [openComment, setOpenComment] = React.useState(false);
+  const [listComment, setListComment] = React.useState([]);
 
   const handleClickOpenComment = () => {
     setOpenComment(true);
+    getAllComment({ idPost: post.id }).then((res) => {
+      setListComment(res.data.items);
+    });
   };
 
   const handleCloseComment = () => {
@@ -68,22 +79,36 @@ function Post() {
   const toggleLike = () => {
     setLiked(!liked);
     setCurrentLike(liked ? currentLike - 1 : currentLike + 1);
+    if (liked) {
+      unlikePost({ idPost: post.id }).then((res) => {
+        console.log("unlike success");
+      });
+    } else {
+      likePost({ idPost: post.id }).then((res) => {
+        console.log("unlike success");
+      });
+    }
   };
+
+  React.useEffect(() => {
+    countLike({ idPost: post.id }).then((res) => {
+      setCurrentLike(res.data);
+    });
+  });
 
   // post
   const [isPost, setIsPost] = React.useState(false);
   const [inputContent, setInputContent] = React.useState("");
-  const [tempInputContent, setTempInputContent] = React.useState("");
 
   const handleInputChange = (e) => {
-    setIsPost(false);
     setInputContent(e.target.value);
-    setTempInputContent(e.target.value);
   };
 
   const handlePost = () => {
-    setIsPost(true);
-    setTempInputContent("")
+    createNewComment({ idPost: post.id, content: inputContent }).then((res) => {
+      setListComment([...listComment, res.data.content]);
+    });
+    setInputContent("");
   };
 
   return (
@@ -517,26 +542,9 @@ function Post() {
 
               {/* Comment */}
               <div className="p-2 row-start-2 row-span-6 w-full overflow-auto border-b">
-                <CommentDetail
-                  content={
-                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi placerat consectetur mi nec sagittis. Nam vulputate dui quis orci tempor pretium. Nullam turpis sem, lacinia non urna at"
-                  }
-                  isTrue={true}
-                />
-                <CommentDetail
-                  content={"Sed sed tempus lorem"}
-                  isTrue={false}
-                />
-                <CommentDetail content={"Sed sed tempus lorem"} isTrue={true} />
-                <CommentDetail
-                  content={"Sed sed tempus lorem"}
-                  isTrue={false}
-                />
-                {isPost ? (
-                  <CommentDetail content={inputContent} isTrue={false} />
-                ) : (
-                  ""
-                )}
+                {listComment.map((comment, index) => {
+                  return <CommentDetail comment={comment} isTrue={false} />;
+                })}
               </div>
 
               <div className="row-start-8 row-span-2 p-4 border-b">
@@ -683,7 +691,7 @@ function Post() {
                   <input
                     type="text"
                     placeholder="Add a comment..."
-                    value={tempInputContent}
+                    value={inputContent}
                     onChange={handleInputChange}
                     className="w-full outline-none break-words whitespace-normal"
                   />

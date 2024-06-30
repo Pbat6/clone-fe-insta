@@ -28,7 +28,7 @@ function MessageLayout({ children }) {
     <React.Fragment>
       {accountExist === false ? (
         <div className="grid grid-cols-12 gap-x-2">
-          <SideBar />
+          <SideBar/>
           {children}
         </div>
       ) : (

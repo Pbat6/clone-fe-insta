@@ -7,6 +7,9 @@ import { MyContext } from "../../components/Layouts/DefaultLayout";
 import Post from "./Post";
 import Story from "./Story";
 import { checkToken } from "../../api/AccountAPI";
+import DecodeToken, { decodeToken } from "../../components/DecodeJWT/decode";
+import { jwtDecode } from "jwt-decode";
+import { getAllPost } from "../../api/PostAPI";
 
 function Home() {
   // check width of the screen
@@ -33,23 +36,32 @@ function Home() {
     };
   }, []);
 
+  // 
+  if(localStorage.getItem('token') !== null){
+    console.log(jwtDecode(localStorage.getItem('token')))
+  }
+  
+
+  // get all post
+  const [posts, setPosts] = React.useState([])
+  React.useEffect(() => {
+    getAllPost().then((res) => {
+      console.log("cac bai post: ", res.data.items)
+      setPosts(res.data.items)
+    })
+  })
   return (
     <div ref={targetRef} class="container col-start-3 col-span-5 mt-4">
-      <div class="flex items-center gap-x-3">
+      {/* <div class="flex items-center gap-x-3">
         {/* <!-- 1 --> */}
-        <Story storyId={1} />
-        <Story storyId={2} />
-        <Story />
-        <Story />
-        <Story />
-        <Story />
-      </div>
+       
+        
+       {/*</div> */}
 
       {/* Post */}
-      <Post />
-      <Post />
-      <Post />
-      <Post />
+      {posts.map(post => {
+        return <Post post={post} />
+      })}
     </div>
   );
 }

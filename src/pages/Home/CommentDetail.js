@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import ReplyComment from "./ReplyComment";
 
-function CommentDetail({ content, isTrue }) {
+function CommentDetail({ comment, isTrue }) {
   const [isReply, setIsReply] = useState(false);
   const [showReply, setShowReply] = useState(false);
 
@@ -12,6 +12,7 @@ function CommentDetail({ content, isTrue }) {
   useEffect(() => {
     setIsReply(isTrue);
   })
+
   return (
     <div className="mb-4 grid grid-cols-12 text-[14px]">
       <div className="col-start-1 col-span-1 w-[42px] h-[42px] flex items-center justify-center mr-2 cursor-pointer">
@@ -23,7 +24,7 @@ function CommentDetail({ content, isTrue }) {
       <div className="col-start-2 col-span-11 ml-2">
         <div className="mt-1">
           <span className="inline-block font-medium mr-2">_Pbat</span>
-          <span>{content}</span>
+          <span>{comment.content}</span>
         </div>
         <div className="flex items-center gap-x-2 mt-1 text-[12px]">
           <span>2h</span>

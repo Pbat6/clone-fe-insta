@@ -1,20 +1,24 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { login } from "../../api/AccountAPI";
 
 function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
+  const navigate = useNavigate()
   const handleLogin = () => {
     login({ username, password })
       .then((response) => {
+        console.log(response)
         console.log("Login success");
-        localStorage.setItem("token", response.data.token);
+        localStorage.setItem("token", response.data.data.token);
+        navigate("/")
       })
       .catch((error) => {
         console.log("Login failed");
         console.error(error);
+        navigate("/login")
       });
   };
 

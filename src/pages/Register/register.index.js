@@ -1,7 +1,7 @@
 import { TextField } from "@mui/material";
 import { useState } from "react";
 import DatePicker from "react-date-picker";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { createAccount } from "../../api/AccountAPI";
 
 function Register() {
@@ -25,8 +25,11 @@ function Register() {
     setDateValue(date);
   };
 
+  const navigate = useNavigate()
+
   // create user
   const handleCreateUser = () => {
+    console.log("Gioi tinh", selectedGender)
     createAccount({
       username,
       password,
@@ -36,7 +39,7 @@ function Register() {
       dateValue,
     })
       .then((response) => {
-        console.log(response);
+        navigate("/login")
       })
       .catch((error) => {
         console.error(error);
@@ -99,8 +102,8 @@ function Register() {
                   class=" border border-gray-300 text-gray-900 text-sm rounded-sm focus:border-[#dbdbdb] block w-full h-full"
                 >
                   <option selected>Gender</option>
-                  <option value="M">Male</option>
-                  <option value="F">Female</option>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
                 </select>
               </div>
 

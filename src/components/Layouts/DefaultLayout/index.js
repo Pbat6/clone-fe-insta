@@ -16,7 +16,8 @@ function DefaultLayout({ children }) {
     const token = localStorage.getItem("token");
     checkToken({ token })
       .then((res) => {
-        if (res.data.valid === true) {
+        console.log(res)
+        if (res.data.data.valid === true) {
           setAccountExist(true);
         } else {
           // navigate("/login");
